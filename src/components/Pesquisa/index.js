@@ -1,6 +1,7 @@
 import BarraPesquisa from "../BarraPesquisa";
 import styled from "styled-components";
 import { use, useState } from "react";
+import {livros} from "./dadosPesquisa"
 
 const PesquisaContainer = styled.section`
         background-image: linear-gradient(90deg, #002F52 35%, #326589 165%);
@@ -18,17 +19,46 @@ const Titulo = styled.h2`
         width: 100%;
 `
 
+const Resultado = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    p {
+        width: 200px;
+    }
+    img {
+        width: 100px;
+    }
+    &:hover {
+        border: 1px solid white;
+    }
+`
+
 function Pesquisa(){
-    const [textoDigitado, setTextoDigitado] = useState("");
+    const [livrosPesquisados, setLivrosPesquisados] = useState([]);
+
+
 
     return(
         <PesquisaContainer>
             <Titulo>Pesquise por um título</Titulo>
             <BarraPesquisa 
             placeholder="Digite sua pesquisa"
-            onBlur={ event => setTextoDigitado(event.target.value)}
+            onBlur={ event => {
+                const textoDigitado = event.target.value;
+                const resultadoPesquisa = livros.filter(livro => livro.titulo.includes(textoDigitado)
+                )
+                setLivrosPesquisados(resultadoPesquisa)
+            }}
             />
-            <p>{textoDigitado}</p>
+            {livrosPesquisados.map(livro => (
+                <Resultado>
+                    <p>{livro.titulo}</p>
+                    <img src={livro.src}/>
+                </Resultado>
+            ))}
         </PesquisaContainer>
     )
 }
